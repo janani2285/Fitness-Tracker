@@ -30,8 +30,8 @@ app.post("/api/workouts", (req, res) => {
 
 // PUT route for updating exisitng workout
 app.put("/api/workouts/:id", (req, res) => {
- 
-  db.Workout.updateOne({ _id: req.params.id }, { $set: { day: new Date(),exercises: req.body } }, (err, data) => {
+ // findExercise(req.params.id);
+  db.Workout.updateOne({ _id: req.params.id }, {$push: {exercises: req.body }}, (err, data) => {
     if (err) {
       console.log(err);
     } else {
@@ -39,6 +39,18 @@ app.put("/api/workouts/:id", (req, res) => {
     }
   });
 });
+
+function findExercise(id) {
+ 
+  db.Workout.find({ _id: id }, (err, data) => {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log("inside findExercise--- ", data)
+     // res.json(data);
+    }
+  });
+};
 /* // POST route for exercise, 
 app.post("/exercise", (req, res) => {
   db.Workout.create(req.body, (err, data) => {
