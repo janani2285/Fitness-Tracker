@@ -5,79 +5,65 @@ module.exports = (app) => {
 
   // GET route for getting all of the workouts
   app.get("/api/workouts", (req, res) => {
-    db.Workout.find({},(err, data) => {
+    db.Workout.find({}, (err, data) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.json(data);
+      }
+    });
+  });
+
+  // POST route for getting adding new workout
+  app.post("/api/workouts", (req, res) => {
+    db.Workout.create(req.body, (err, data) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.json(data);
+      }
+    });
+  });
+
+  // PUT route for updating exisitng workout
+  app.put("/api/workouts/:id", (req, res) => {
+    if (!validateData(req)) {
+      db.Workout.updateOne({ _id: req.params.id }, { $push: { exercises: req.body } }, (err, data) => {
         if (err) {
           console.log(err);
         } else {
-          /* console.log("-----+++++++++++++++--------")
-          console.log(data)
-          console.log("-----+++++++++++++++--------") */
           res.json(data);
         }
       });
+    }else{
+      db.Workout.find({_id: req.params.id }, (err, data) => {
+        if (err) {
+          console.log(err);
+        } else {
+          res.json(data);
+        }
+      });
+    }
+
   });
 
-// POST route for getting adding new workout
-app.post("/api/workouts", (req, res) => {
-  db.Workout.create(req.body, (err, data) => {
-    if (err) {
-      console.log(err);
-    } else {
-      res.json(data);
+  //Do not added data if empty form is submitted.
+  function validateData(req) {
+    if ((req.body.name === "" && req.body.distance === 0 && req.body.duration === 0) || (req.body.name === "" && req.body.weight === 0 && req.body.duration === 0 && req.body.reps === 0 && req.body.sets === 0)) {
+      return true;
     }
-  });
-});
+    return false;
+  }
 
-// PUT route for updating exisitng workout
-app.put("/api/workouts/:id", (req, res) => {
- // findExercise(req.params.id);
-  db.Workout.updateOne({ _id: req.params.id }, {$push: {exercises: req.body }}, (err, data) => {
-    if (err) {
-      console.log(err);
-    } else {
-      res.json(data);
-    }
-  });
-});
+  // GET route for getting workout range, 
+  app.get("/api/workouts/range", (req, res) => {
+    db.Workout.find({}, (err, data) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.json(data);
+      }
+    });
 
-function findExercise(id) {
- 
-  db.Workout.find({ _id: id }, (err, data) => {
-    if (err) {
-      console.log(err);
-    } else {
-      console.log("inside findExercise--- ", data)
-     // res.json(data);
-    }
   });
-};
-/* // POST route for exercise, 
-app.post("/exercise", (req, res) => {
-  db.Workout.create(req.body, (err, data) => {
-    if (err) {
-      console.log(err);
-    } else {
-      res.json(data);
-    }
-  });
-});
-// PUT route for exercise, id in query param
-app.put("/exercise", (req, res) => {
-  console.log("/exercise")
-}); */
-
-// GET route for getting workout range, 
-app.get("/api/workouts/range", (req, res) => {
-  db.Workout.find({},(err, data) => {
-    if (err) {
-      console.log(err);
-    } else {
-      /* console.log("-----+++++++++++++++--------")
-      console.log(data)
-      console.log("-----+++++++++++++++--------") */
-      res.json(data);
-    }
-  });
- 
-});
 };
