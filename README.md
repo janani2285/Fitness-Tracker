@@ -24,7 +24,7 @@ Run ``` npm run start ``` command in terminal(Mac) or command promt(windows) to 
 
 ## Application
 
-The application is deployed in heroku and can be found at https://vast-springs-92238.herokuapp.com/
+The application is deployed in heroku and can be found at https://peaceful-lowlands-08055.herokuapp.com/
 
 
 ## Screenshots
